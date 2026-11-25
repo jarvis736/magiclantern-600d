@@ -1,0 +1,66 @@
+name: Build M-Film for EOS 600D
+
+on:
+  push:
+    branches: [ci/mfilm-600d]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out M-Film v0.2.4 from our fork
+        uses: actions/checkout@v4
+        with:
+          repository: jarvis736/mfilm-canon-film-simulation
+          ref: 84370e411ae8e106e8a4df5f094150a162707bcb
+          path: mfilm
+          persist-credentials: false
+
+      - name: Check out the Magic Lantern revision required by M-Film
+        uses: actions/checkout@v4
+        with:
+          ref: ed3e7c0dfacfdeaf3349dee73edf9e3621217462
+          path: magiclantern
+          persist-credentials: false
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install the build dependencies
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq gcc-arm-none-eabi binutils-arm-none-eabi libnewlib-arm-none-eabi zip unzip qemu-user
+          python -m pip install -q numpy scipy pillow segno docutils
+
+      - name: Build M-Film and verify the card archive
+        working-directory: mfilm
+        run: |
+          export ML_SRC="$GITHUB_WORKSPACE/magiclantern"
+          export LOG="$RUNNER_TEMP/mfilm-600d-build.log"
+          bash ml-dev/build_fork.sh 600D.102
+
+          card=ml-dev/out/fork-600D.102
+          cp ml-dev/CAMERA-README.txt "$card/M-FILM-README.txt"
+          cp LICENSE "$card/LICENSE.txt"
+          cp THIRD_PARTY.md "$card/THIRD_PARTY.txt"
+          cp ml-dev/films/spektra/SPEKTRAFILM_LICENSE.txt "$card/SPEKTRAFILM_LICENSE.txt"
+          cp ml-dev/films/spektra/CHANGELOG.txt "$card/SPEKTRAFILM_CHANGELOG.txt"
+
+          version=$(tr -d ' \r\n' < VERSION)
+          archive="$GITHUB_WORKSPACE/M-Film-$version-camera-600D.102.zip"
+          (cd "$card" && zip -qr "$archive" .)
+          unzip -tq "$archive"
+          for member in autoexec.bin ML-SETUP.FIR ML/modules/filmos.mo ML/DARKROOM/TABLES.txt; do
+            unzip -p "$archive" "$member" > /dev/null
+          done
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: M-Film-camera-600D.102
+          path: M-Film-*-camera-600D.102.zip
+          if-no-files-found: error
