@@ -1,0 +1,39 @@
+name: Build Magic Lantern for EOS 600D
+
+on:
+  push:
+    branches:
+      - ci/600d-build
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    container: debian:trixie-slim
+    timeout-minutes: 15
+    steps:
+      - name: Install build dependencies
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends             ca-certificates git build-essential gcc-arm-none-eabi libnewlib-dev             python3 python3-docutils python3-setuptools zip unzip
+
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Build the 600D package
+        run: make -C platform/600D.102 -j"$(nproc)" CONFIG_QEMU=n
+
+      - name: Verify the package
+        run: |
+          archive=platform/600D.102/build/magiclantern.zip
+          unzip -t "$archive"
+          unzip -l "$archive" autoexec.bin ML-SETUP.FIR
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: magiclantern-600D-102
+          path: platform/600D.102/build/magiclantern.zip
+          if-no-files-found: error
