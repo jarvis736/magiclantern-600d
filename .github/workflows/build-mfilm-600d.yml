@@ -42,6 +42,7 @@ jobs:
         run: |
           export ML_SRC="$GITHUB_WORKSPACE/magiclantern"
           export LOG="$RUNNER_TEMP/mfilm-600d-build.log"
+          mkdir -p "$HOME/ml"
           bash ml-dev/build_fork.sh 600D.102
 
           card=ml-dev/out/fork-600D.102
@@ -55,9 +56,10 @@ jobs:
           archive="$GITHUB_WORKSPACE/M-Film-$version-camera-600D.102.zip"
           (cd "$card" && zip -qr "$archive" .)
           unzip -tq "$archive"
-          for member in autoexec.bin ML-SETUP.FIR ML/modules/filmos.mo ML/DARKROOM/TABLES.txt; do
+          for member in autoexec.bin ML-SETUP.FIR ML/modules/filmos.mo ML/data/FOSFILMS.BIN; do
             unzip -p "$archive" "$member" > /dev/null
           done
+          unzip -p "$archive" 'ML/DARKROOM/LOOK*.LUT' > /dev/null
 
       - uses: actions/upload-artifact@v4
         with:
