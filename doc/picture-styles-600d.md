@@ -28,6 +28,24 @@ Base **Monochrome**, netteté **3**, contraste **+2**, effet filtre **Jaune**, e
 
 Pour la rue et l’architecture. Le filtre jaune sépare mieux les nuages du ciel bleu sur les scènes qui en contiennent. Le style applique le noir et blanc au JPEG et ne simule pas le grain argentique.
 
+## Profils .PF3 à LUT intégrée
+
+Pour aller au-delà des réglages globaux du boîtier, FilmTone propose des Picture Styles avec une LUT intégrée. L’auteur du projet indique avoir vérifié cette variante sur un EOS 600D/T3i, avec son profil Superia 200. Les trois essais ci-dessous restent à valider sur ce 600D.
+
+- [Superia 200](https://filmtone.pictures/en/films/fujifilm-superia-200) pour vérifier d’abord que le boîtier applique bien la LUT.
+- [Portra 400 UC](https://filmtone.pictures/en/films/kodak-portra-400-uc) pour le portrait.
+- [Acros R](https://filmtone.pictures/en/films/fujifilm-acros-r) pour le noir et blanc.
+
+Sur chaque fiche, choisir **Exact LUT (older bodies only)**. Connecter le 600D au PC en USB, en mode P, et utiliser la fonction d’enregistrement des styles personnalisés d’**EOS Utility**. Charger d’abord le profil dans un seul emplacement pour comparer son JPEG avec le style Standard à exposition et balance des blancs fixes. Les fichiers sont fournis par FilmTone.
+
+Une LUT 3D transforme les couleurs et les tonalités. Le grain spatial et le halo autour des hautes lumières ne sont pas produits par cette transformation. « Exact LUT » se réfère à la LUT intégrée, pas à une reproduction mesurée de la pellicule originale.
+
+FilmTone permet aussi de convertir un fichier `.cube` en `.PF3`. Pour élaborer un rendu couleur sur mesure, utiliser une LUT prévue pour une image déjà rendue, puis vérifier le JPEG sur le 600D. Une LUT prévue pour convertir des images Log n’est pas un bon point de départ ici.
+
+- [FilmTone pour le Canon EOS 600D](https://filmtone.pictures/en/cameras/eos-600d)
+- [Enregistrement des styles dans EOS Utility](https://global.canon/en/imaging/picturestyle/file/eos-utility.html)
+- [FilmTone, import et export des LUT](https://filmtone.pictures/en/about)
+
 ## Vérifier sur le 600D
 
 Pour chaque recette, photographie une fois avec le style de base et une fois avec le style personnalisé, en gardant la même exposition et la même balance des blancs pour cette paire. Compare les **JPEG sortis du boîtier**. Pour le portrait, inclus un visage et un textile clair. Pour la rue et le noir et blanc, inclus des tons clairs et des ombres dans le même cadre.
